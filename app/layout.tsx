@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AnonCampus - Connect. Chat. Share. Stay Anonymous.",
+  title: "mkceanonyms - Connect. Chat. Share. Stay Anonymous.",
   description: "An anonymous college community for conversations, random connections, collaboration and campus life.",
 };
 

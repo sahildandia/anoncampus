@@ -155,7 +155,7 @@ export default function RandomChatPage() {
     <div className="h-[calc(100vh)] bg-neutral-950 p-4 sm:p-6 flex flex-col selection:bg-blue-500/30">
       <header className="mb-4 flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 tracking-tight">AnonChat</h1>
+          <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 tracking-tight">mkceanonyms</h1>
           <p className="text-neutral-400 mt-1 text-sm">Connect instantly. Talk freely.</p>
         </div>
       </header>

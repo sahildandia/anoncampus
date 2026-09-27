@@ -7,7 +7,7 @@ export default function LandingPage() {
       <header className="px-6 py-4 border-b border-neutral-800/50 flex justify-between items-center bg-neutral-950/80 backdrop-blur-md sticky top-0 z-10">
         <div className="flex items-center gap-2 font-bold text-xl tracking-tight">
           <Ghost className="w-6 h-6 text-blue-500" />
-          <span>AnonChat</span>
+          <span>mkceanonyms</span>
         </div>
         <nav className="flex gap-4 items-center">
           <Link href="/random-chat" className="text-sm font-medium bg-white text-black hover:bg-neutral-200 px-5 py-2 rounded-full transition-all active:scale-95 shadow-[0_0_15px_rgba(255,255,255,0.1)]">
@@ -71,7 +71,7 @@ export default function LandingPage() {
       </main>
 
       <footer className="px-6 py-8 border-t border-neutral-900 text-center text-neutral-600 relative z-10 bg-neutral-950">
-        <p>© {new Date().getFullYear()} AnonChat. Built for private conversations.</p>
+        <p>© {new Date().getFullYear()} mkceanonyms. Built for private conversations.</p>
       </footer>
     </div>
   );
