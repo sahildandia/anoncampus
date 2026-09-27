@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { Dices, Search, X, Flag, Ban, Send, User } from "lucide-react";
-import { io as ClientIO, Socket } from "socket.io-client";
+import { supabase } from "@/lib/supabase";
+import { RealtimeChannel } from "@supabase/supabase-js";
 
 type ChatState = "IDLE" | "SEARCHING" | "MATCHED";
 
@@ -10,56 +11,108 @@ export default function RandomChatPage() {
   const [chatState, setChatState] = useState<ChatState>("IDLE");
   const [messages, setMessages] = useState<{ id: string; sender: string; content: string }[]>([]);
   const [input, setInput] = useState("");
-  const [socket, setSocket] = useState<Socket | null>(null);
+  const [channel, setChannel] = useState<RealtimeChannel | null>(null);
   const [roomId, setRoomId] = useState<string | null>(null);
+  
+  // Generate a random ID for this client session
+  const [myId] = useState(() => Math.random().toString(36).substring(2, 15));
 
   useEffect(() => {
-    const socketInstance = ClientIO(process.env.NEXT_PUBLIC_APP_URL || "", {
-      path: "/api/socket/io",
-      addTrailingSlash: false,
-    });
-
-    socketInstance.on("connect", () => {
-      console.log("Connected to socket");
-    });
-
-    socketInstance.on("random_match_found", (data) => {
-      setRoomId(data.roomId);
-      setChatState("MATCHED");
-      setMessages([{ id: "sys1", sender: "system", content: "You have been matched anonymously. Say hi!" }]);
-    });
-
-    socketInstance.on("receive_message", (data) => {
-      setMessages(prev => [...prev, { id: data.id, sender: data.sender === socketInstance.id ? "me" : "partner", content: data.content }]);
-    });
-    
-    socketInstance.on("partner_disconnected", () => {
-      setMessages(prev => [...prev, { id: Date.now().toString(), sender: "system", content: "Your partner has left the chat." }]);
-    });
-
-    setSocket(socketInstance);
-
+    // Cleanup on unmount
     return () => {
-      socketInstance.disconnect();
+      if (channel) {
+        channel.unsubscribe();
+      }
     };
-  }, []);
+  }, [channel]);
+
+  const joinRoom = (newRoomId: string, oldChannel: RealtimeChannel | null) => {
+    if (oldChannel) {
+      oldChannel.unsubscribe();
+    }
+    
+    setRoomId(newRoomId);
+    setChatState("MATCHED");
+    setMessages([{ id: "sys1", sender: "system", content: "You have been matched anonymously. Say hi!" }]);
+
+    const chatChannel = supabase.channel(newRoomId);
+    
+    chatChannel
+      .on('broadcast', { event: 'message' }, (payload) => {
+        setMessages(prev => [...prev, { 
+          id: payload.payload.id, 
+          sender: "partner", 
+          content: payload.payload.content 
+        }]);
+      })
+      .on('broadcast', { event: 'leave' }, () => {
+        setMessages(prev => [...prev, { id: Date.now().toString(), sender: "system", content: "Your partner has left the chat." }]);
+      })
+      .subscribe();
+
+    setChannel(chatChannel);
+  };
 
   const handleStartSearch = () => {
     setChatState("SEARCHING");
-    socket?.emit("join_random_queue");
+    
+    const waitingChannel = supabase.channel('waiting_room', {
+      config: { presence: { key: myId } }
+    });
+
+    waitingChannel
+      .on('presence', { event: 'sync' }, () => {
+        const state = waitingChannel.presenceState();
+        const otherUsers = Object.keys(state).filter(id => id !== myId);
+        
+        if (otherUsers.length > 0) {
+          const partnerId = otherUsers[0];
+          
+          // To prevent race conditions (both users trying to create a room simultaneously),
+          // only the user with the alphabetically smaller ID initiates the match.
+          if (myId < partnerId) {
+            const newRoomId = `room-${Date.now()}-${myId}`;
+            
+            waitingChannel.send({
+              type: 'broadcast',
+              event: 'match_invite',
+              payload: { to: partnerId, roomId: newRoomId }
+            });
+            
+            joinRoom(newRoomId, waitingChannel);
+          }
+        }
+      })
+      .on('broadcast', { event: 'match_invite' }, (payload) => {
+        if (payload.payload.to === myId) {
+          joinRoom(payload.payload.roomId, waitingChannel);
+        }
+      })
+      .subscribe(async (status) => {
+        if (status === 'SUBSCRIBED') {
+          await waitingChannel.track({ status: 'waiting', joinedAt: Date.now() });
+        }
+      });
+      
+    setChannel(waitingChannel);
   };
 
   const handleCancelSearch = () => {
     setChatState("IDLE");
-    socket?.emit("cancel_random_queue");
+    if (channel) {
+      channel.unsubscribe();
+      setChannel(null);
+    }
   };
 
   const handleEndChat = () => {
     setChatState("IDLE");
     setMessages([]);
-    if (roomId) {
-      socket?.emit("end_chat", { roomId });
-      setRoomId(null);
+    setRoomId(null);
+    if (channel) {
+      channel.send({ type: 'broadcast', event: 'leave', payload: {} });
+      channel.unsubscribe();
+      setChannel(null);
     }
   };
 
@@ -70,8 +123,17 @@ export default function RandomChatPage() {
 
   const sendMessage = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim() || !roomId) return;
-    socket?.emit("send_message", { roomId, content: input, sender: socket?.id });
+    if (!input.trim() || !channel) return;
+    
+    const msgId = Date.now().toString();
+    
+    channel.send({
+      type: 'broadcast',
+      event: 'message',
+      payload: { id: msgId, content: input }
+    });
+    
+    setMessages(prev => [...prev, { id: msgId, sender: "me", content: input }]);
     setInput("");
   };
 
