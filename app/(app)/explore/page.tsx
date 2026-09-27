@@ -5,7 +5,7 @@ export default function ExplorePage() {
     <div className="p-6 max-w-3xl mx-auto">
       <header className="mb-8">
         <h1 className="text-3xl font-bold">Explore</h1>
-        <p className="text-neutral-500 mt-2">See what's happening across campus.</p>
+        <p className="text-neutral-500 mt-2">See what&apos;s happening across campus.</p>
       </header>
 
       <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl p-4 mb-8">
@@ -52,7 +52,7 @@ export default function ExplorePage() {
   );
 }
 
-function PostCard({ author, time, content, likes, comments, community, isConfession }: any) {
+function PostCard({ author, time, content, likes, comments, community, isConfession }: { author: string, time: string, content: string, likes: number, comments: number, community?: string, isConfession?: boolean }) {
   return (
     <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl p-5 hover:border-neutral-300 dark:hover:border-neutral-700 transition">
       <div className="flex justify-between items-start mb-3">

@@ -68,7 +68,7 @@ export default function TeamFinderPage() {
   );
 }
 
-function TeamListingCard({ title, description, skills, currentSize, maxSize, author }: any) {
+function TeamListingCard({ title, description, skills, currentSize, maxSize, author }: { title: string, description: string, skills: string[], currentSize: number, maxSize: number, author: string }) {
   return (
     <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl p-5 hover:border-neutral-300 dark:hover:border-neutral-700 transition flex flex-col h-full">
       <div className="flex justify-between items-start mb-2">

@@ -56,7 +56,7 @@ export default function CommunitiesPage() {
   );
 }
 
-function CommunityCard({ name, description, members, category }: any) {
+function CommunityCard({ name, description, members, category }: { name: string, description: string, members: number, category: string }) {
   return (
     <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl p-5 hover:border-blue-500 transition group flex flex-col h-full">
       <div className="flex justify-between items-start mb-4">

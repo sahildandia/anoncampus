@@ -154,7 +154,7 @@ function LoginContent() {
       </form>
       
       <div className="mt-6 text-center text-sm">
-        <span className="text-neutral-500">Don't have an account? </span>
+        <span className="text-neutral-500">Don&apos;t have an account? </span>
         <Link href="/register" className="font-medium text-blue-600 hover:text-blue-500 transition-colors">
           Create account
         </Link>
