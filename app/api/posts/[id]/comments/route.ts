@@ -3,8 +3,9 @@ import { db } from "@/lib/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../../auth/[...nextauth]/route";
 
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -14,7 +15,7 @@ export async function POST(req: Request, { params }: { params: { id: string } })
     const comment = await db.comment.create({
       data: {
         content,
-        postId: params.id,
+        postId: id,
         authorId: session.user.id
       },
       include: {
