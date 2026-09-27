@@ -149,7 +149,7 @@ export default function RandomChatPage() {
   };
 
   return (
-    <div className="h-[100dvh] bg-neutral-950 p-2 sm:p-4 md:p-6 flex flex-col selection:bg-blue-500/30">
+    <div className="fixed inset-0 overflow-hidden bg-neutral-950 p-2 sm:p-4 md:p-6 flex flex-col selection:bg-blue-500/30">
       <header className="mb-2 sm:mb-4 flex justify-between items-center px-2">
         <div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 tracking-tight">mkceanonyms</h1>
@@ -290,7 +290,7 @@ export default function RandomChatPage() {
                 value={input}
                 onChange={e => setInput(e.target.value)}
                 placeholder="Type a message..." 
-                className="flex-1 bg-neutral-950 border border-neutral-800 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 rounded-full px-4 sm:px-6 py-2.5 sm:py-3.5 text-sm sm:text-base text-neutral-200 placeholder-neutral-500 outline-none transition-all shadow-inner"
+                className="flex-1 bg-neutral-950 border border-neutral-800 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 rounded-full px-4 sm:px-6 py-2.5 sm:py-3.5 text-base text-neutral-200 placeholder-neutral-500 outline-none transition-all shadow-inner"
               />
               <button 
                 type="submit"
