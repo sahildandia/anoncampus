@@ -65,10 +65,10 @@ export async function POST(req: Request) {
       { message: "Account successfully created." },
       { status: 201 }
     );
-  } catch (error) {
+  } catch (error: any) {
     console.error("Registration error:", error);
     return NextResponse.json(
-      { message: "Unable to create account. Please try again." },
+      { message: `Database Error: ${error?.message || "Unknown error"}` },
       { status: 500 }
     );
   }
