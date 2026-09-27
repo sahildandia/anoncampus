@@ -13,6 +13,8 @@ export default function RandomChatPage() {
   const [input, setInput] = useState("");
   const [channel, setChannel] = useState<RealtimeChannel | null>(null);
   const [roomId, setRoomId] = useState<string | null>(null);
+  const [myGender, setMyGender] = useState<"Boy" | "Girl" | null>(null);
+  const [partnerGender, setPartnerGender] = useState<"Boy" | "Girl" | null>(null);
   
   // Generate a random ID for this client session
   const [myId] = useState(() => Math.random().toString(36).substring(2, 15));
@@ -54,6 +56,11 @@ export default function RandomChatPage() {
   };
 
   const handleStartSearch = () => {
+    if (!myGender) {
+      alert("Please select if you are a Boy or Girl before finding a partner.");
+      return;
+    }
+
     setChatState("SEARCHING");
     
     const waitingChannel = supabase.channel('waiting_room', {
@@ -67,16 +74,20 @@ export default function RandomChatPage() {
         
         if (otherUsers.length > 0) {
           const partnerId = otherUsers[0];
+          // @ts-ignore
+          const pGender = state[partnerId]?.[0]?.gender || "Unknown";
           
           // To prevent race conditions (both users trying to create a room simultaneously),
           // only the user with the alphabetically smaller ID initiates the match.
           if (myId < partnerId) {
             const newRoomId = `room-${Date.now()}-${myId}`;
             
+            setPartnerGender(pGender);
+            
             waitingChannel.send({
               type: 'broadcast',
               event: 'match_invite',
-              payload: { to: partnerId, roomId: newRoomId }
+              payload: { to: partnerId, roomId: newRoomId, myGender }
             });
             
             joinRoom(newRoomId, waitingChannel);
@@ -85,12 +96,13 @@ export default function RandomChatPage() {
       })
       .on('broadcast', { event: 'match_invite' }, (payload) => {
         if (payload.payload.to === myId) {
+          setPartnerGender(payload.payload.myGender || "Unknown");
           joinRoom(payload.payload.roomId, waitingChannel);
         }
       })
       .subscribe(async (status) => {
         if (status === 'SUBSCRIBED') {
-          await waitingChannel.track({ status: 'waiting', joinedAt: Date.now() });
+          await waitingChannel.track({ status: 'waiting', joinedAt: Date.now(), gender: myGender });
         }
       });
       
@@ -99,6 +111,7 @@ export default function RandomChatPage() {
 
   const handleCancelSearch = () => {
     setChatState("IDLE");
+    setPartnerGender(null);
     if (channel) {
       channel.unsubscribe();
       setChannel(null);
@@ -109,6 +122,7 @@ export default function RandomChatPage() {
     setChatState("IDLE");
     setMessages([]);
     setRoomId(null);
+    setPartnerGender(null);
     if (channel) {
       channel.send({ type: 'broadcast', event: 'leave', payload: {} });
       channel.unsubscribe();
@@ -155,14 +169,43 @@ export default function RandomChatPage() {
               <Dices className="w-12 h-12 text-blue-400" />
             </div>
             <h2 className="text-3xl font-bold mb-3 text-neutral-100 tracking-tight">Ready to meet someone?</h2>
-            <p className="text-neutral-400 max-w-md mb-10 text-lg leading-relaxed">
+            <p className="text-neutral-400 max-w-md mb-8 text-lg leading-relaxed">
               You will be matched with another stranger anonymously. Be respectful and have fun.
             </p>
+
+            <div className="flex gap-4 mb-10 w-full max-w-xs">
+              <button 
+                onClick={() => setMyGender("Boy")}
+                className={`flex-1 py-3 rounded-full font-bold transition-all border ${
+                  myGender === "Boy" 
+                    ? "bg-blue-600 border-blue-500 text-white shadow-[0_0_15px_rgba(37,99,235,0.4)]" 
+                    : "bg-neutral-900 border-neutral-700 text-neutral-400 hover:bg-neutral-800"
+                }`}
+              >
+                👦 Boy
+              </button>
+              <button 
+                onClick={() => setMyGender("Girl")}
+                className={`flex-1 py-3 rounded-full font-bold transition-all border ${
+                  myGender === "Girl" 
+                    ? "bg-purple-600 border-purple-500 text-white shadow-[0_0_15px_rgba(147,51,234,0.4)]" 
+                    : "bg-neutral-900 border-neutral-700 text-neutral-400 hover:bg-neutral-800"
+                }`}
+              >
+                👧 Girl
+              </button>
+            </div>
+
             <button 
               onClick={handleStartSearch}
-              className="group relative flex items-center gap-3 bg-white hover:bg-neutral-200 text-black px-10 py-5 rounded-full font-bold text-lg transition-all hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(255,255,255,0.1)]"
+              disabled={!myGender}
+              className={`group relative flex items-center justify-center gap-3 w-full max-w-xs px-10 py-5 rounded-full font-bold text-lg transition-all ${
+                myGender 
+                  ? "bg-white hover:bg-neutral-200 text-black shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:scale-105 active:scale-95" 
+                  : "bg-neutral-800 text-neutral-500 cursor-not-allowed opacity-70"
+              }`}
             >
-              <Search className="w-6 h-6 transition-transform group-hover:rotate-12" />
+              <Search className={`w-6 h-6 transition-transform ${myGender ? "group-hover:rotate-12" : ""}`} />
               Find a Partner
             </button>
           </div>
@@ -195,7 +238,9 @@ export default function RandomChatPage() {
                   <User className="w-6 h-6 text-neutral-400" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-neutral-200">Anonymous Partner</h3>
+                  <h3 className="font-bold text-neutral-200">
+                    Anonymous Partner {partnerGender && <span className="text-neutral-500 font-normal ml-1">({partnerGender})</span>}
+                  </h3>
                   <span className="text-xs text-green-400 flex items-center gap-1.5 font-medium tracking-wide uppercase">
                     <span className="w-2 h-2 bg-green-400 rounded-full shadow-[0_0_8px_rgba(74,222,128,0.8)] animate-pulse"></span>
                     Online
