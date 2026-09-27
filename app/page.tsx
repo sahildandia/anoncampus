@@ -1,69 +1,94 @@
-import Image from "next/image";
+import Link from "next/link";
+import { MessageSquare, Users, BookOpen, Shield, Dices, UsersRound } from "lucide-react";
 
-export default function Home() {
+export default function LandingPage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
+    <div className="flex flex-col min-h-screen bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100">
+      <header className="px-6 py-4 border-b border-neutral-200 dark:border-neutral-800 flex justify-between items-center bg-white dark:bg-neutral-900 sticky top-0 z-10">
+        <div className="flex items-center gap-2 font-bold text-xl tracking-tight">
+          <Shield className="w-6 h-6 text-blue-600 dark:text-blue-500" />
+          <span>AnonCampus</span>
+        </div>
+        <nav className="flex gap-4 items-center">
+          <Link href="/login" className="text-sm font-medium hover:text-blue-600 dark:hover:text-blue-500">
+            Log In
+          </Link>
+          <Link href="/register" className="text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition">
+            Get Started
+          </Link>
+        </nav>
+      </header>
+
+      <main className="flex-1 flex flex-col items-center justify-center py-20 px-4">
+        <section className="text-center max-w-3xl mx-auto mb-24">
+          <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight mb-6">
+            Connect Without Revealing Who You Are
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="text-xl md:text-2xl text-neutral-600 dark:text-neutral-400 mb-10 max-w-2xl mx-auto">
+            An anonymous college community for conversations, random connections, collaboration and campus life.
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/register" className="text-lg font-medium bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-md transition shadow-lg">
+              Get Started
+            </Link>
+            <Link href="/explore" className="text-lg font-medium bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-700 px-8 py-4 rounded-md transition shadow-sm">
+              Explore
+            </Link>
+          </div>
+        </section>
+
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto px-4 w-full">
+          <FeatureCard
+            icon={<Dices className="w-8 h-8 text-blue-500" />}
+            title="Random Connections"
+            description="Meet another student anonymously. Have spontaneous chats without judgment."
+          />
+          <FeatureCard
+            icon={<MessageSquare className="w-8 h-8 text-blue-500" />}
+            title="Anonymous Discussions"
+            description="Share thoughts and questions without displaying your real identity."
+          />
+          <FeatureCard
+            icon={<Users className="w-8 h-8 text-blue-500" />}
+            title="College Communities"
+            description="Join conversations around your department, year and interests."
+          />
+          <FeatureCard
+            icon={<UsersRound className="w-8 h-8 text-blue-500" />}
+            title="Find Teammates"
+            description="Build teams for projects and hackathons with fellow students."
+          />
+          <FeatureCard
+            icon={<BookOpen className="w-8 h-8 text-blue-500" />}
+            title="Study Together"
+            description="Create and join study groups to prepare for exams and placements."
+          />
+          <FeatureCard
+            icon={<Shield className="w-8 h-8 text-blue-500" />}
+            title="Safe Community"
+            description="Built-in reporting, blocking and moderation tools to keep discussions healthy."
+          />
+        </section>
       </main>
+
+      <footer className="px-6 py-8 border-t border-neutral-200 dark:border-neutral-800 text-center text-neutral-500 dark:text-neutral-400">
+        <p>© {new Date().getFullYear()} AnonCampus. All rights reserved.</p>
+        <p className="text-sm mt-2">Connect. Chat. Share. Stay Anonymous.</p>
+      </footer>
+    </div>
+  );
+}
+
+function FeatureCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
+  return (
+    <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 p-6 rounded-xl shadow-sm flex flex-col items-start gap-4 hover:shadow-md transition">
+      <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+        {icon}
+      </div>
+      <h3 className="text-xl font-bold">{title}</h3>
+      <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed">
+        {description}
+      </p>
     </div>
   );
 }
