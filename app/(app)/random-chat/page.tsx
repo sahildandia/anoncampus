@@ -138,101 +138,102 @@ export default function RandomChatPage() {
   };
 
   return (
-    <div className="h-[calc(100vh-2rem)] p-6 flex flex-col">
-      <header className="mb-6">
-        <h1 className="text-3xl font-bold">Random Chat</h1>
-        <p className="text-neutral-500 mt-2">Connect anonymously with another student.</p>
+    <div className="h-[calc(100vh)] bg-neutral-950 p-4 sm:p-6 flex flex-col selection:bg-blue-500/30">
+      <header className="mb-4 flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 tracking-tight">AnonChat</h1>
+          <p className="text-neutral-400 mt-1 text-sm">Connect instantly. Talk freely.</p>
+        </div>
       </header>
 
-      <div className="flex-1 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl overflow-hidden flex flex-col">
+      <div className="flex-1 bg-neutral-900/50 backdrop-blur-md border border-neutral-800 rounded-3xl overflow-hidden flex flex-col shadow-2xl relative">
+        {/* Glow behind the chat box */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-blue-600/10 rounded-full blur-[100px] pointer-events-none" />
         {chatState === "IDLE" && (
-          <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
-            <div className="w-20 h-20 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mb-6">
-              <Dices className="w-10 h-10 text-blue-600 dark:text-blue-500" />
+          <div className="flex-1 flex flex-col items-center justify-center p-6 text-center relative z-10">
+            <div className="w-24 h-24 bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-blue-500/30 rounded-full flex items-center justify-center mb-8 shadow-[0_0_30px_rgba(59,130,246,0.2)]">
+              <Dices className="w-12 h-12 text-blue-400" />
             </div>
-            <h2 className="text-2xl font-bold mb-2">Ready to meet someone?</h2>
-            <p className="text-neutral-500 max-w-md mb-8">
-              You will be matched with another student anonymously. Please be respectful and follow the community guidelines.
+            <h2 className="text-3xl font-bold mb-3 text-neutral-100 tracking-tight">Ready to meet someone?</h2>
+            <p className="text-neutral-400 max-w-md mb-10 text-lg leading-relaxed">
+              You will be matched with another stranger anonymously. Be respectful and have fun.
             </p>
             <button 
               onClick={handleStartSearch}
-              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg font-bold text-lg transition shadow-lg"
+              className="group relative flex items-center gap-3 bg-white hover:bg-neutral-200 text-black px-10 py-5 rounded-full font-bold text-lg transition-all hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(255,255,255,0.1)]"
             >
-              <Search className="w-5 h-5" />
-              Find Someone
+              <Search className="w-6 h-6 transition-transform group-hover:rotate-12" />
+              Find a Partner
             </button>
           </div>
         )}
 
         {chatState === "SEARCHING" && (
-          <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
-            <div className="w-20 h-20 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mb-6 animate-pulse">
-              <Search className="w-10 h-10 text-blue-600 dark:text-blue-500 animate-spin-slow" />
+          <div className="flex-1 flex flex-col items-center justify-center p-6 text-center relative z-10">
+            <div className="w-24 h-24 bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-blue-500/30 rounded-full flex items-center justify-center mb-8 shadow-[0_0_30px_rgba(59,130,246,0.2)] animate-pulse">
+              <Search className="w-12 h-12 text-blue-400 animate-spin-slow" />
             </div>
-            <h2 className="text-2xl font-bold mb-2">Searching for another student...</h2>
-            <p className="text-neutral-500 max-w-md mb-8">
-              This might take a moment depending on how many people are currently online.
+            <h2 className="text-3xl font-bold mb-3 text-neutral-100 tracking-tight">Searching for someone...</h2>
+            <p className="text-neutral-400 max-w-md mb-10 text-lg leading-relaxed">
+              This might take a moment depending on how many people are online.
             </p>
             <button 
               onClick={handleCancelSearch}
-              className="flex items-center gap-2 bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 text-neutral-800 dark:text-neutral-200 px-6 py-3 rounded-lg font-medium transition"
+              className="flex items-center gap-3 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 px-8 py-4 rounded-full font-medium text-lg transition-colors border border-neutral-700"
             >
               <X className="w-5 h-5" />
-              Cancel
+              Cancel Search
             </button>
           </div>
         )}
 
         {chatState === "MATCHED" && (
-          <div className="flex-1 flex flex-col h-full">
-            <div className="p-4 border-b border-neutral-200 dark:border-neutral-800 flex justify-between items-center bg-neutral-50 dark:bg-neutral-950/50">
+          <div className="flex-1 flex flex-col h-full relative z-10 bg-neutral-950/40">
+            <div className="p-4 border-b border-neutral-800/80 flex justify-between items-center bg-neutral-900/80 backdrop-blur-md">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-neutral-200 dark:bg-neutral-800 rounded-full flex items-center justify-center">
-                  <User className="w-6 h-6 text-neutral-500" />
+                <div className="w-12 h-12 bg-neutral-800 border border-neutral-700 rounded-full flex items-center justify-center shadow-inner">
+                  <User className="w-6 h-6 text-neutral-400" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-sm">Anonymous Partner</h3>
-                  <span className="text-xs text-green-500 flex items-center gap-1">
-                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                  <h3 className="font-bold text-neutral-200">Anonymous Partner</h3>
+                  <span className="text-xs text-green-400 flex items-center gap-1.5 font-medium tracking-wide uppercase">
+                    <span className="w-2 h-2 bg-green-400 rounded-full shadow-[0_0_8px_rgba(74,222,128,0.8)] animate-pulse"></span>
                     Online
                   </span>
                 </div>
               </div>
               <div className="flex gap-2">
-                <button title="Report" className="p-2 text-neutral-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-md transition">
+                <button title="Report" className="p-2.5 text-neutral-400 hover:text-red-400 hover:bg-red-400/10 rounded-full transition-colors">
                   <Flag className="w-5 h-5" />
                 </button>
-                <button title="Block" className="p-2 text-neutral-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-md transition">
-                  <Ban className="w-5 h-5" />
+                <button onClick={handleNext} className="px-5 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 hover:border-neutral-600 rounded-full font-medium transition-all active:scale-95">
+                  Skip
                 </button>
-                <button onClick={handleNext} className="px-4 py-2 bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 rounded-md font-medium text-sm transition">
-                  Next
-                </button>
-                <button onClick={handleEndChat} className="px-4 py-2 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-900/50 rounded-md font-medium text-sm transition flex items-center gap-1">
+                <button onClick={handleEndChat} className="px-5 py-2.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 hover:border-red-500/40 rounded-full font-medium transition-all flex items-center gap-2 active:scale-95">
                   <X className="w-4 h-4" />
                   End
                 </button>
               </div>
             </div>
 
-            <div className="flex-1 p-4 overflow-y-auto flex flex-col gap-4">
+            <div className="flex-1 p-6 overflow-y-auto flex flex-col gap-5">
               {messages.map((msg) => (
                 <div 
                   key={msg.id} 
-                  className={`flex flex-col max-w-[80%] ${
-                    msg.sender === "system" ? "self-center items-center my-4" : 
+                  className={`flex flex-col max-w-[75%] ${
+                    msg.sender === "system" ? "self-center items-center my-6" : 
                     msg.sender === "me" ? "self-end items-end" : "self-start items-start"
                   }`}
                 >
                   {msg.sender === "system" ? (
-                    <span className="bg-neutral-100 dark:bg-neutral-800 text-neutral-500 text-xs px-3 py-1 rounded-full">
+                    <span className="bg-neutral-800/80 backdrop-blur-sm border border-neutral-700/50 text-neutral-400 text-xs px-4 py-1.5 rounded-full uppercase tracking-wider font-medium">
                       {msg.content}
                     </span>
                   ) : (
-                    <div className={`px-4 py-2 rounded-2xl ${
+                    <div className={`px-5 py-3 rounded-2xl shadow-sm text-[15px] leading-relaxed ${
                       msg.sender === "me" 
-                        ? "bg-blue-600 text-white rounded-br-sm" 
-                        : "bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 rounded-bl-sm"
+                        ? "bg-blue-600 text-white rounded-tr-sm" 
+                        : "bg-neutral-800 border border-neutral-700 text-neutral-200 rounded-tl-sm"
                     }`}>
                       {msg.content}
                     </div>
@@ -241,20 +242,20 @@ export default function RandomChatPage() {
               ))}
             </div>
 
-            <form onSubmit={sendMessage} className="p-4 border-t border-neutral-200 dark:border-neutral-800 flex gap-2">
+            <form onSubmit={sendMessage} className="p-4 border-t border-neutral-800/80 bg-neutral-900/80 backdrop-blur-md flex gap-3">
               <input 
                 type="text" 
                 value={input}
                 onChange={e => setInput(e.target.value)}
                 placeholder="Type a message..." 
-                className="flex-1 bg-neutral-100 dark:bg-neutral-800 border-transparent focus:bg-white dark:focus:bg-neutral-900 focus:border-blue-500 rounded-lg px-4 py-2 outline-none transition"
+                className="flex-1 bg-neutral-950 border border-neutral-800 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 rounded-full px-6 py-3.5 text-neutral-200 placeholder-neutral-500 outline-none transition-all shadow-inner"
               />
               <button 
                 type="submit"
                 disabled={!input.trim()}
-                className="p-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:hover:bg-blue-600 text-white rounded-lg transition"
+                className="w-14 h-14 flex items-center justify-center bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:hover:bg-blue-600 text-white rounded-full transition-all active:scale-90 flex-shrink-0 shadow-[0_0_15px_rgba(37,99,235,0.4)]"
               >
-                <Send className="w-5 h-5" />
+                <Send className="w-5 h-5 ml-1" />
               </button>
             </form>
           </div>
