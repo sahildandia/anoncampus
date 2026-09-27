@@ -14,9 +14,31 @@ export default function RandomChatPage() {
   const [channel, setChannel] = useState<RealtimeChannel | null>(null);
   const [myGender, setMyGender] = useState<"Boy" | "Girl" | null>(null);
   const [partnerGender, setPartnerGender] = useState<"Boy" | "Girl" | null>(null);
+  const [onlineCount, setOnlineCount] = useState<number>(1);
   
   // Generate a random ID for this client session
   const [myId] = useState(() => Math.random().toString(36).substring(2, 15));
+
+  useEffect(() => {
+    const globalChannel = supabase.channel('global_presence', {
+      config: { presence: { key: myId } }
+    });
+
+    globalChannel
+      .on('presence', { event: 'sync' }, () => {
+        const state = globalChannel.presenceState();
+        setOnlineCount(Object.keys(state).length);
+      })
+      .subscribe(async (status) => {
+        if (status === 'SUBSCRIBED') {
+          await globalChannel.track({ onlineAt: new Date().toISOString() });
+        }
+      });
+
+    return () => {
+      globalChannel.unsubscribe();
+    };
+  }, [myId]);
 
   useEffect(() => {
     // Cleanup on unmount
@@ -153,7 +175,13 @@ export default function RandomChatPage() {
       <header className="mb-2 sm:mb-4 flex justify-between items-center px-2">
         <div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 tracking-tight">mkceanonyms</h1>
-          <p className="text-neutral-400 mt-0.5 sm:mt-1 text-xs sm:text-sm">Connect instantly. Talk freely.</p>
+          <div className="flex items-center gap-3 mt-0.5 sm:mt-1">
+            <p className="text-neutral-400 text-xs sm:text-sm">Connect instantly. Talk freely.</p>
+            <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-neutral-900 border border-neutral-800 text-[10px] sm:text-xs text-neutral-300">
+              <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_5px_rgba(34,197,94,0.5)]"></span>
+              {onlineCount} online
+            </div>
+          </div>
         </div>
       </header>
 
