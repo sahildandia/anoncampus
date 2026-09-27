@@ -10,11 +10,8 @@ export default function LandingPage() {
           <span>AnonCampus</span>
         </div>
         <nav className="flex gap-4 items-center">
-          <Link href="/login" className="text-sm font-medium hover:text-blue-600 dark:hover:text-blue-500">
-            Log In
-          </Link>
-          <Link href="/register" className="text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition">
-            Get Started
+          <Link href="/random-chat" className="text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition">
+            Start Chat
           </Link>
         </nav>
       </header>
@@ -28,8 +25,8 @@ export default function LandingPage() {
             An anonymous college community for conversations, random connections, collaboration and campus life.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/register" className="text-lg font-medium bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-md transition shadow-lg">
-              Get Started
+            <Link href="/random-chat" className="text-lg font-medium bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-md transition shadow-lg">
+              Start Random Chat
             </Link>
             <Link href="/explore" className="text-lg font-medium bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-700 px-8 py-4 rounded-md transition shadow-sm">
               Explore
