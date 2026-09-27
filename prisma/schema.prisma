@@ -3,9 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model User {
@@ -137,8 +136,8 @@ model Message {
   
   sender      User     @relation("MessageSender", fields: [senderId], references: [id], onDelete: Cascade)
   receiver    User?    @relation("MessageReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
-  community   Community? @relation(fields: [roomId], references: [id], map: "Message_community_fkey")
-  group       Group?   @relation(fields: [roomId], references: [id], map: "Message_group_fkey")
+  community   Community? @relation(fields: [roomId], references: [id])
+  group       Group?   @relation(fields: [roomId], references: [id])
 }
 
 model Group {
